@@ -18,11 +18,6 @@ module.exports = function(grunt) {
     // package.json
     pkg: grunt.file.readJSON('package.json'),
 
-    // `clean`
-    clean: {
-      all: ['tmp']
-    },
-
     // `jshint`
     jshint: {
       options: {
@@ -30,14 +25,8 @@ module.exports = function(grunt) {
       },
       all: [
         'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>'
+        'tasks/*.js'
       ]
-    },
-
-    // `nodeunit`
-    nodeunit: {
-      tests: ['test/*_test.js']
     }
 
   });
@@ -63,7 +52,7 @@ module.exports = function(grunt) {
     grunt.task.run('funky_tag');
   });
 
-  grunt.registerTask('test', ['clean', 'jshint', 'nodeunit']);
+  grunt.registerTask('test', ['jshint']);
   grunt.registerTask('t', ['test']);
 
 };

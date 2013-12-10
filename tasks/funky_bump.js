@@ -10,9 +10,6 @@
 
 var semver = require('semver');
 
-/**
- * Get space.
- */
 function getSpace(src) {
   var spaces = src.match(/^[ ]+/gm) || [];
   var tabs = src.match(/^[\t]+/gm) || [];
@@ -31,18 +28,12 @@ function getSpace(src) {
 
 module.exports = function(grunt) {
 
-  /**
-   * Failed.
-   */
   function fail(message, error) {
     if (error) grunt.log.error(error);
     grunt.fail.warn(message || 'Task failed.');
   }
 
-  /**
-   * Register task.
-   */
-  grunt.registerTask('funky_bump', 'Bump a package version.', function (version) {
+  grunt.registerTask('funky_bump', function (version) {
     // Read package.json
     var pkgPath = 'package.json';
 
