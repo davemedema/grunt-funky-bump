@@ -38,7 +38,6 @@
     "grunt-contrib-clean": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-nodeunit": "*",
-    "grunt-tag": "git://github.com/davemedema/grunt-tag.git",
     "load-grunt-tasks": "*",
     "semver": "*"
   }
