@@ -33,7 +33,7 @@ module.exports = function(grunt) {
     grunt.fail.warn(message || 'Task failed.');
   }
 
-  grunt.registerTask('funky_bump', function (version) {
+  grunt.registerTask('funky_bump', function(version) {
     // Read package.json
     var pkgPath = 'package.json';
 
