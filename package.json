@@ -38,6 +38,7 @@
     "grunt-contrib-clean": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-nodeunit": "*",
+    "grunt-funky-tag": "*",
     "load-grunt-tasks": "*",
     "semver": "*"
   }
