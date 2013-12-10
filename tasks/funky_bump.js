@@ -42,7 +42,7 @@ module.exports = function(grunt) {
   /**
    * Register task.
    */
-  grunt.registerTask('funky_bump', 'Bump.', function (version) {
+  grunt.registerTask('funky_bump', 'Bump a package version.', function (version) {
     // Read package.json
     var pkgPath = 'package.json';
 
