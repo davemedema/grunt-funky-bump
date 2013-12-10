@@ -1,3 +1,3 @@
-# grunt-bump
+# grunt-funky-bump
 
 > Bump.
