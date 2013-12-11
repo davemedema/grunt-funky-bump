@@ -1,6 +1,6 @@
 {
   "name": "grunt-funky-bump",
-  "description": "Bump a package version.",
+  "description": "Bump semantic versions in JSON files.",
   "version": "0.1.5",
   "homepage": "https://github.com/davemedema/grunt-funky-bump",
   "author": {

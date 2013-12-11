@@ -23,6 +23,35 @@ module.exports = function(grunt) {
       all: ['tmp']
     },
 
+    // `funky_bump`
+    funky_bump: {
+      release: {
+        src: ['package.json']
+      },
+      custom_json_prop: {
+        options: {
+          jsonProp: 'foo',
+          updateConfig: false
+        },
+        src: ['test/fixtures/test.json'],
+        dest: 'tmp/custom_json_prop.json'
+      },
+      default_json_prop: {
+        options: {
+          updateConfig: false
+        },
+        src: ['test/fixtures/test.json'],
+        dest: 'tmp/default_json_prop.json'
+      },
+      update_config: {
+        options: {
+          configProp: 'test',
+        },
+        src: ['test/fixtures/test.json'],
+        dest: 'tmp/update_config.json'
+      }
+    },
+
     // `jshint`
     jshint: {
       options: {
@@ -59,11 +88,18 @@ module.exports = function(grunt) {
 
   grunt.registerTask('release', function(type) {
     grunt.task.run('test');
-    grunt.task.run('funky_bump:' + (type || 'patch'));
+    grunt.task.run('funky_bump:release:' + (type || 'patch'));
     grunt.task.run('funky_tag');
   });
 
-  grunt.registerTask('test', ['clean', 'jshint', 'nodeunit']);
+  grunt.registerTask('test', function() {
+    grunt.task.run('clean');
+    grunt.task.run('jshint');
+    grunt.task.run('funky_bump:custom_json_prop');
+    grunt.task.run('funky_bump:default_json_prop');
+    grunt.task.run('funky_bump:update_config');
+    grunt.task.run('nodeunit');
+  });
   grunt.registerTask('t', ['test']);
 
 };
