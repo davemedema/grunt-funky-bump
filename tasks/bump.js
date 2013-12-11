@@ -43,7 +43,7 @@ module.exports = function(grunt) {
   var utils = require('funky-grunt-utils')(grunt);
 
   // Register task
-  grunt.registerTask('funky_bump', 'Bump a package version.', function(release) {
+  grunt.registerTask('bump', 'Bump a package version.', function(release) {
 
     // Read pkg
     var pkgPath = 'package.json';
