@@ -52,61 +52,40 @@ module.exports = function(grunt) {
   }
 
   // Register task
-  grunt.registerMultiTask('funky_bump', 'Bump semantic versions in JSON files.', function(release) {
-    var opts = this.options({
-      configProp: 'pkg',
-      jsonProp: 'version',
-      updateConfig: true
-    });
+  grunt.registerTask('funky_bump', 'Bump a package version.', function(release) {
 
-    // Bump each src-dest file pair
-    this.files.forEach(function(fm) {
-      fm.src.forEach(function(filepath) {
-        var dest    = fm.dest || filepath;
-        var jsonStr = grunt.file.read(filepath);
-        var json    = JSON.parse(jsonStr);
-        
-        // Validate opts.jsonProp
-        if (!json[opts.jsonProp]) {
-          fail('"' + opts.jsonProp + '" property not found.');
-        }
+    // Read pkg
+    var pkgPath = 'package.json';
+    var pkgStr  = grunt.file.read(pkgPath);
+    var pkg     = JSON.parse(pkgStr);
+    
+    // Validate pkg.version
+    if (!semver.valid(pkg.version)) {
+      fail('"' + pkg.version + '" is not a valid semantic version.');
+    }
 
-        // Validate old version
-        var oldVersion = json[opts.jsonProp];
+    // Validate release
+    release = (release || 'patch').toLowerCase();
 
-        if (!semver.valid(oldVersion)) {
-          fail('"' + oldVersion + '" is not a valid semantic version.');
-        }
+    if (!/^(major|minor|patch|prerelease)$/i.test(release) && !semver.valid(release)) {
+      fail('"' + release + '" is not a valid release type or a semantic version.');
+    }
 
-        // Validate release
-        release = (release || 'patch').toLowerCase();
+    // Bump pkg.version
+    pkg.version = semver.valid(release) || semver.inc(pkg.version, release);
 
-        if (!/^(major|minor|patch|prerelease)$/i.test(release) && !semver.valid(release)) {
-          fail('"' + release + '" is not a valid release type or a semantic version.');
-        }
+    // Write pkgPath
+    var space = getSpace(pkgStr);
 
-        // Bump release
-        var newVersion = semver.valid(release) || semver.inc(oldVersion, release);
+    if (!grunt.file.write(pkgPath, JSON.stringify(pkg, null, space))) {
+      fail('Couldn\'t write "' + pkgPath + '".');
+    }
 
-        // Update JSON
-        json[opts.jsonProp] = newVersion;
+    // Update grunt.config
+    grunt.config.set('pkg', pkg);
 
-        // Write JSON
-        var space = getSpace(jsonStr);
-
-        if (!grunt.file.write(dest, JSON.stringify(json, null, space))) {
-          fail('Couldn\'t write "' + dest + '".');
-        }
-
-        // Update opts.configProp
-        if (opts.updateConfig) {
-          grunt.config.set(opts.configProp, json);
-        }
-
-        // Inform
-        grunt.log.ok('Bumped to: ' + newVersion);
-      });
-    });
+    // Inform
+    grunt.log.ok('Bumped to: ' + pkg.version);
   });
 
 };

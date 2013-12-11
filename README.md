@@ -1,3 +1,3 @@
 # grunt-funky-bump
 
-> Bump semantic versions in JSON files.
+> Bump a package version.
