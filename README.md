@@ -1,3 +1,3 @@
 # grunt-funky-bump
 
-> Bump a package version.
+Bump a package version.

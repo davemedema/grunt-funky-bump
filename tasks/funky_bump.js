@@ -40,16 +40,7 @@ function getSpace(str) {
  */
 module.exports = function(grunt) {
 
-  /**
-   * Displays `message` and aborts Grunt. Optionally logs `error`.
-   *
-   * @param {String} message
-   * @param {Mixed} error
-   */
-  function fail(message, error) {
-    if (error) grunt.log.error(error);
-    grunt.fail.warn(message || 'Task failed.');
-  }
+  var utils = require('funky-grunt-utils')(grunt);
 
   // Register task
   grunt.registerTask('funky_bump', 'Bump a package version.', function(release) {
@@ -58,17 +49,17 @@ module.exports = function(grunt) {
     var pkgPath = 'package.json';
     var pkgStr  = grunt.file.read(pkgPath);
     var pkg     = JSON.parse(pkgStr);
-    
+
     // Validate pkg.version
     if (!semver.valid(pkg.version)) {
-      fail('"' + pkg.version + '" is not a valid semantic version.');
+      utils.fail('"' + pkg.version + '" is not a valid semantic version.');
     }
 
     // Validate release
     release = (release || 'patch').toLowerCase();
 
     if (!/^(major|minor|patch|prerelease)$/i.test(release) && !semver.valid(release)) {
-      fail('"' + release + '" is not a valid release type or a semantic version.');
+      utils.fail('"' + release + '" is not a valid release type or a semantic version.');
     }
 
     // Bump pkg.version
@@ -78,7 +69,7 @@ module.exports = function(grunt) {
     var space = getSpace(pkgStr);
 
     if (!grunt.file.write(pkgPath, JSON.stringify(pkg, null, space))) {
-      fail('Couldn\'t write "' + pkgPath + '".');
+      utils.fail('Couldn\'t write "' + pkgPath + '".');
     }
 
     // Update grunt.config
