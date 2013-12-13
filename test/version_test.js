@@ -22,15 +22,21 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
-exports.all_test = {
+exports.version_test = {
 
   setUp: function(done) {
     done();
   },
 
   works: function(test) {
-    test.expect(1);
-    test.ok(true, 'Works.');
+    var expected = '0.1.0';
+
+    var json = grunt.file.readJSON('tmp/package.json');
+    var pkg = grunt.config('bumpPkg');
+
+    test.expect(2);
+    test.equal(json.version, expected, 'Should be equal.');
+    test.equal(pkg.version, expected, 'Should be equal.');
     test.done();
   }
 

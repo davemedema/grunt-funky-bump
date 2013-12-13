@@ -11,12 +11,12 @@
 var semver = require('semver');
 
 /**
- * Returns the prevalent spacing in `str`.
+ * Returns the prevalent indentation in `str`.
  *
  * @param {String} str
  * @return {String}
  */
-function getSpace(str) {
+function getIndentation(str) {
   var spaces = str.match(/^[ ]+/gm) || [];
   var tabs = str.match(/^[\t]+/gm) || [];
 
@@ -40,43 +40,51 @@ function getSpace(str) {
  */
 module.exports = function(grunt) {
 
-  var utils = require('funky-grunt-utils')(grunt);
-
-  // Register task
+  // register task
   grunt.registerTask('bump', 'Bump a package version.', function(release) {
+    var opts = this.options({
+      configProp: 'pkg',
+      file: 'package.json',
+    });
 
-    // Read pkg
-    var pkgPath = 'package.json';
-    var pkgStr  = grunt.file.read(pkgPath);
-    var pkg     = JSON.parse(pkgStr);
-
-    // Validate pkg.version
-    if (!semver.valid(pkg.version)) {
-      utils.fail('"' + pkg.version + '" is not a valid semantic version.');
+    // Validate opts.file
+    if (!grunt.file.exists(opts.file)) {
+      grunt.warn('File "' + opts.file + '" not found.');
     }
 
-    // Validate release
+    // read and parse opts.file
+    var jsonStr = grunt.file.read(opts.file);
+    var json    = JSON.parse(jsonStr);
+
+    // make sure we're updating a valid semantic version
+    if (!semver.valid(json.version)) {
+      grunt.warn('"' + json.version + '" is not a valid semantic version.');
+    }
+
+    // validate release
     release = (release || 'patch').toLowerCase();
 
-    if (!/^(major|minor|patch|prerelease)$/i.test(release) && !semver.valid(release)) {
-      utils.fail('"' + release + '" is not a valid release type or a semantic version.');
+    var releaseTypes = ['major', 'minor', 'patch', 'prerelease'];
+
+    if (releaseTypes.indexOf(release) === -1 && !semver.valid(release)) {
+      grunt.warn('"' + release + '" is not a valid release type or semantic version.');
     }
 
-    // Bump pkg.version
-    pkg.version = semver.valid(release) || semver.inc(pkg.version, release);
+    // update json
+    json.version = semver.valid(release) || semver.inc(json.version, release);
 
-    // Write pkgPath
-    var space = getSpace(pkgStr);
+    // write opts.file
+    var indentation = getIndentation(jsonStr);
 
-    if (!grunt.file.write(pkgPath, JSON.stringify(pkg, null, space))) {
-      utils.fail('Couldn\'t write "' + pkgPath + '".');
+    if (!grunt.file.write(opts.file, JSON.stringify(json, null, indentation))) {
+      grunt.warn('Couldn\'t write "' + opts.file + '".');
     }
 
-    // Update grunt.config
-    grunt.config.set('pkg', pkg);
+    // update config property
+    grunt.config.set(opts.configProp, json);
 
-    // Inform
-    grunt.log.ok('Bumped to: ' + pkg.version);
+    // inform
+    grunt.log.ok('Bumped to: ' + json.version);
   });
 
 };
