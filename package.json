@@ -23,9 +23,6 @@
     }
   ],
   "main": "Gruntfile.js",
-  "peerDependencies": {
-    "grunt": "~0.4.1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/davemedema/grunt-funky-bump.git"
