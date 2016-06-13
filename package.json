@@ -1,7 +1,7 @@
 {
   "name": "grunt-funky-bump",
   "description": "Bump a package version.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/davemedema/grunt-funky-bump",
   "author": {
     "name": "Dave Medema",
